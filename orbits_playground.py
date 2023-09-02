@@ -5,7 +5,7 @@ import scipy as sp
 import matplotlib.pyplot as plt
 import constants as c 
 from tools import kepler2rv
-from dynamics import satellite_translational_eom
+from dynamics import target_satellite_eom
 
 
 # Lets get an initial plot of the two orbits
@@ -32,8 +32,8 @@ r_v_helper_initial = np.concatenate((r_helper_initial,v_helper_initial))
 # Target Initial Orbit:
 r_v_target_initial = np.concatenate((r_target_initial, v_target_initial))
 
-result_helper = sp.integrate.solve_ivp(satellite_translational_eom, [0,end_time], r_v_helper_initial,t_eval=t, method='RK45', rtol=1e-12, atol=1e-12)
-result_target = sp.integrate.solve_ivp(satellite_translational_eom, [0,end_time], r_v_target_initial,t_eval=t_target, method='RK45', rtol=1e-12, atol=1e-12)
+result_helper = sp.integrate.solve_ivp(target_satellite_eom, [0,end_time], r_v_helper_initial,t_eval=t, method='RK45', rtol=1e-12, atol=1e-12)
+result_target = sp.integrate.solve_ivp(target_satellite_eom, [0,end_time], r_v_target_initial,t_eval=t_target, method='RK45', rtol=1e-12, atol=1e-12)
 
 
 # Extracting position components
