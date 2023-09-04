@@ -5,11 +5,10 @@ import scipy as sp
 import matplotlib.pyplot as plt
 import constants as c 
 from tools import kepler2rv
-from dynamics import target_satellite_eom
+from dynamics import target_satellite_eom, integrate_states_forward
 from controls import orbit_controller
 
 # Start by setting up initial conditions.
-
 r_helper_initial, v_helper_initial = kepler2rv(c.a*1000,c.e, np.deg2rad(c.raan), np.deg2rad(c.i),0,0,c.mu_earth)
 r_target_initial, v_target_initial = kepler2rv(c.a_t*1000,c.e_t, np.deg2rad(c.raan_t), np.deg2rad(c.i_t),0,0,c.mu_earth)
 
@@ -39,10 +38,11 @@ def run_rendezvous_sim(z_init_helper, z_init_target, conv_criteria):
     # Control loop that exits when converged.
     while not converged and iter_count < int(1.3E6):
         # Input state to controller.
-        F_control, Deltar, Deltar_d, A, B = orbit_controller(np.concatenate((z_helper,z_target)), c.m, c.K1, c.K2)
+        F_control, rel_distance, rel_speed_diff, A, B = orbit_controller(np.concatenate((z_helper,z_target)), c.m, c.K1, c.K2)
         # Input Control Thrust and both helper and target states to dynamics.
         # Integrate dynamics to propagate forward 1 second.
-        z_helper, z_target = integrate_states_forward(z_helper,z_target,F_control,1)
+        seconds_forward = 1
+        z_helper, z_target = integrate_states_forward(z_helper, z_target, F_control, seconds_forward)
         
         # Increment to new time (add one second).
         t += 1
