@@ -22,7 +22,7 @@ def target_satellite_eom(t,y):
     dvdt = -c.mu_earth * r / (norm_r**3)
     return np.array([drdt[0],drdt[1],drdt[2],dvdt[0],dvdt[1],dvdt[2]])
 
-def helper_satellite_eom(t,y,u):
+def helper_satellite_eom(t,y,ux,uy,uz):
     """
     r[0]: x position
     r[1]: y position
@@ -34,6 +34,7 @@ def helper_satellite_eom(t,y,u):
     """
     r = y[:3]
     v = y[3:6]
+    u = np.array([ux,uy,uz])
     norm_r = np.linalg.norm(r)  # Norm of the position vector
     
     # Equations of motion

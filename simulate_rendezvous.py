@@ -24,8 +24,8 @@ def run_rendezvous_sim(z_init_helper, z_init_target, conv_criteria):
     z_helper = z_init_helper
     z_target = z_init_target
     F_control = np.array([0,0,0])
-    rel_distance = np.linalg.norm(z_helper[:3] - z_target[:3])
-    rel_speed_diff = np.linalg.norm(z_helper[3:6] - z_target[3:6])
+    rel_distance = z_helper[:3] - z_target[:3]
+    rel_speed_diff = z_helper[3:6] - z_target[3:6]
     t = 0
     iter_count = 1
     # Initialize Histories for saving simulation data.
@@ -36,14 +36,15 @@ def run_rendezvous_sim(z_init_helper, z_init_target, conv_criteria):
     rel_distance_history = [rel_distance]
     rel_speed_diff_history = [rel_speed_diff]
     # Control loop that exits when converged.
-    while not converged and iter_count < int(1.3E6):
+    while not converged and iter_count < int(0.7E6):
         # Input state to controller.
         F_control, rel_distance, rel_speed_diff, A, B = orbit_controller(np.concatenate((z_helper,z_target)), c.m, c.K1, c.K2)
         # Input Control Thrust and both helper and target states to dynamics.
         # Integrate dynamics to propagate forward 1 second.
         seconds_forward = 1
-        z_helper, z_target = integrate_states_forward(z_helper, z_target, F_control, seconds_forward)
-        
+        z_helper_scipy, z_target_scipy = integrate_states_forward(z_helper, z_target, F_control, seconds_forward)
+        z_helper = z_helper_scipy.y.flatten()
+        z_target = z_target_scipy.y.flatten()
         # Increment to new time (add one second).
         t += 1
         # Append newest data to respective history arrrays: (hopefully .append() works for np arrays and all.)
@@ -54,7 +55,7 @@ def run_rendezvous_sim(z_init_helper, z_init_target, conv_criteria):
         rel_distance_history.append(rel_distance)
         rel_speed_diff_history.append(rel_speed_diff)
         # Check for convergence.
-        if conv_criteria[0] > rel_distance and conv_criteria[1] > rel_speed_diff:
+        if conv_criteria[0] > np.linalg.norm(rel_distance) and conv_criteria[1] > np.linalg.norm(rel_speed_diff):
             converged = True
         iter_count += 1
     return t_history, z_helper_history, z_target_history, F_control_history, rel_distance_history, rel_speed_diff_history

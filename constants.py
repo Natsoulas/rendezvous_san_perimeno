@@ -21,5 +21,5 @@ mu_earth = 3.986E14 # m^3/s^2
 
 
 # Control Law constants (still need tuning):
-K1 = 5
-K2 = 5
+K1 = 0.01
+K2 = 0.001
