@@ -30,30 +30,30 @@ def run_rendezvous_sim(z_init_helper, z_init_target, conv_criteria):
     iter_count = 1
     # Initialize Histories for saving simulation data.
     t_history = [t]
-    z_helper_history = [z_helper]
-    z_target_history = [z_target]
-    F_control_history = [F_control]
-    rel_distance_history = [rel_distance]
-    rel_speed_diff_history = [rel_speed_diff]
+    z_helper_history = np.array([z_helper])
+    z_target_history = np.array([z_target])
+    F_control_history = np.array([F_control])
+    rel_distance_history = np.array([rel_distance])
+    rel_speed_diff_history = np.array([rel_speed_diff])
     # Control loop that exits when converged.
-    while not converged and iter_count < int(0.7E6):
+    while not converged and t < int(1.3E6):
         # Input state to controller.
         F_control, rel_distance, rel_speed_diff, A, B = orbit_controller(np.concatenate((z_helper,z_target)), c.m, c.K1, c.K2)
         # Input Control Thrust and both helper and target states to dynamics.
         # Integrate dynamics to propagate forward 1 second.
-        seconds_forward = 1
+        seconds_forward = 100
         z_helper_scipy, z_target_scipy = integrate_states_forward(z_helper, z_target, F_control, seconds_forward)
         z_helper = z_helper_scipy.y.flatten()
         z_target = z_target_scipy.y.flatten()
         # Increment to new time (add one second).
-        t += 1
+        t += seconds_forward
         # Append newest data to respective history arrrays: (hopefully .append() works for np arrays and all.)
         t_history.append(t)
-        z_helper_history.append(z_helper)
-        z_target_history.append(z_target)
-        F_control_history.append(F_control)
-        rel_distance_history.append(rel_distance)
-        rel_speed_diff_history.append(rel_speed_diff)
+        z_helper_history = np.append(z_helper_history,np.reshape(z_helper,(1,6)),0)
+        z_target_history = np.append(z_target_history,np.reshape(z_target,(1,6)),0)
+        F_control_history = np.append(F_control_history,np.reshape(F_control,(1,3)),0)
+        rel_distance_history = np.append(rel_distance_history,np.reshape(rel_distance,(1,3)),0)
+        rel_speed_diff_history = np.append(rel_speed_diff_history,np.reshape(rel_speed_diff,(1,3)),0)
         # Check for convergence.
         if conv_criteria[0] > np.linalg.norm(rel_distance) and conv_criteria[1] > np.linalg.norm(rel_speed_diff):
             converged = True

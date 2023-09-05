@@ -15,11 +15,11 @@ raan_t = 42 # degrees
 
 # Helper Satellite Properties:
 m = 500 # kg
-thrust = 0.450 # Newtons
+thrust = 50 # Newtons
 isp = 2200 # seconds
 mu_earth = 3.986E14 # m^3/s^2
 
 
 # Control Law constants (still need tuning):
-K1 = 0.01
-K2 = 0.001
+K1 = 0.0001
+K2 = 0.000001

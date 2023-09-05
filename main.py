@@ -19,11 +19,12 @@ conv_criteria = [r_conv_criteria, v_conv_criteria]
 
 # Run rendezvous simulation.
 t_history, z_helper_history, z_target_history, F_control_history, rel_distance_history, rel_speed_diff_history = run_rendezvous_sim(z_helper_initial, z_target_initial, conv_criteria)
-print(t_history)
 
 # Save off history arrays into a pandas df.
-history_df = pd.DataFrame(data = {'Time History':t_history, 'Helper State History':[z_helper_history],
-                                  'Target State History':[z_target_history], 'Thruster History':[F_control_history], 
-                                  'Relative Distance History':[rel_distance_history], 'Relative Speed History':[rel_speed_diff_history]})
+history_df = pd.DataFrame(data = {'Time History':t_history, 'x_helper_history':z_helper_history[:,0], 'y_helper_history':z_helper_history[:,1], 'z_helper_history':z_helper_history[:,2],
+                                  'x_target_history':z_target_history[:,0], 'y_target_history':z_target_history[:,1], 'z_target_history':z_target_history[:,2],
+                                  'Ux History':F_control_history[:,0], 'Uy History':F_control_history[:,1], 'Uz History':F_control_history[:,2],
+                                  'dist_x_history':rel_distance_history[:,0], 'dist_y_history':rel_distance_history[:,1], 'dist_z_history':rel_distance_history[:,2]})
 # Save df as a csv in subdirectory for generating visuals.
-history_df.to_csv('sim_trial.csv')
+
+history_df.to_json('sim_trial.json')
