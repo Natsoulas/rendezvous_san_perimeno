@@ -40,3 +40,52 @@ ax.scatter3D(history_df['x_target_history'].values, history_df['y_target_history
 ax.set_xlabel('x')
 ax.set_ylabel('y')
 ax.set_zlabel('z')
+
+# Control Thrust History Plots
+
+u_history = np.concatenate((np.reshape(history_df['Ux History'].values, (len(history_df['Ux History'].values),1)), np.reshape(history_df['Uy History'].values, (len(history_df['Ux History'].values),1)), np.reshape(history_df['Uz History'].values, (len(history_df['Ux History'].values),1))), axis=1)
+# Calculate the magnitude for each row
+u_magnitude = np.linalg.norm(u_history, axis=1).reshape(-1, 1)
+
+plot2 = plt.figure(2)
+plt.plot(history_df['Time History'].values, u_magnitude)
+plt.title("Magnitude of Control Thrust vs. time")
+plt.xlabel("time (s)")
+plt.ylabel("Magnitude of Control Thrust Force (N)")
+
+plot4 = plt.figure(4)
+plt.plot(history_df['Time History'].values, np.reshape(history_df['Ux History'].values, (len(history_df['Ux History'].values))))
+plt.title("Magnitude of Control Thrust in x direction vs. time")
+plt.xlabel("time (s)")
+plt.ylabel("Magnitude of x-direction Control Thrust Force (N)")
+
+plot5 = plt.figure(5)
+plt.plot(history_df['Time History'].values, np.reshape(history_df['Uy History'].values, (len(history_df['Uy History'].values))))
+plt.title("Magnitude of Control Thrust in y direction vs. time")
+plt.xlabel("time (s)")
+plt.ylabel("Magnitude of y-direction Control Thrust Force (N)")
+
+plot10 = plt.figure(10)
+plt.plot(history_df['Time History'].values, np.reshape(history_df['Uz History'].values, (len(history_df['Uz History'].values))))
+plt.title("Magnitude of Control Thrust in z direction vs. time")
+plt.xlabel("time (s)")
+plt.ylabel("Magnitude of z-direction Control Thrust Force (N)")
+
+# Relative Distance Component Plots
+plot6 = plt.figure(6)
+plt.plot(history_df['Time History'].values, np.reshape(history_df['dist_x_history'].values, (len(history_df['dist_x_history'].values))))
+plt.title("Magnitude of Relative Distance between satellites in x direction vs. time")
+plt.xlabel("time (s)")
+plt.ylabel("Magnitude of x-direction distance (m)")
+
+plot7 = plt.figure(7)
+plt.plot(history_df['Time History'].values, np.reshape(history_df['dist_y_history'].values, (len(history_df['dist_y_history'].values))))
+plt.title("Magnitude of Relative Distance between satellites in y direction vs. time")
+plt.xlabel("time (s)")
+plt.ylabel("Magnitude of y-direction distance (m)")
+
+plot8 = plt.figure(8)
+plt.plot(history_df['Time History'].values, np.reshape(history_df['dist_z_history'].values, (len(history_df['dist_z_history'].values))))
+plt.title("Magnitude of Relative Distance between satellites in z direction vs. time")
+plt.xlabel("time (s)")
+plt.ylabel("Magnitude of z-direction distance (m)")

@@ -3,7 +3,7 @@ import numpy as np
 import constants as c
 
 # Reference Tracking Control Law
-def orbit_controller(z,m_sc,K1,K2):
+def orbit_controller(z,F_control_previous,m_sc):
     """Orbit Controller: Outputs desired Thrust to follow a reference orbit
     for translational motion in cartesian coordinates. Reference frame is earth
     inertial."""
@@ -16,9 +16,11 @@ def orbit_controller(z,m_sc,K1,K2):
     a_kep = lambda r,mu: -(mu/(np.linalg.norm(r)**3))*r
     Deltar = r_deputy - r_deputy_desired
     Deltar_d = v_deputy - v_deputy_desired
-    A = a_kep(r_deputy, c.mu_earth)
+    norm_v_deputy = np.linalg.norm(v_deputy)
+    deputy_drag = -0.5*c.Cd*c.Area*c.rho_atmosphere*(norm_v_deputy**2)*(v_deputy/norm_v_deputy)
+    A = a_kep(r_deputy, c.mu_earth) + deputy_drag/c.m # +  F_control_previous/c.m
     B = a_kep(r_deputy_desired, c.mu_earth)
-    F_com = -(A-B) - c.K1*Deltar - c.K2*Deltar_d
+    F_com = -c.K0*(A-B) - c.K1*Deltar - c.K2*Deltar_d
     F_command = F_com*m_sc
     
     # Actuator saturation occurs if commanded thrust is more than thruster can produce.

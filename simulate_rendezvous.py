@@ -36,9 +36,9 @@ def run_rendezvous_sim(z_init_helper, z_init_target, conv_criteria):
     rel_distance_history = np.array([rel_distance])
     rel_speed_diff_history = np.array([rel_speed_diff])
     # Control loop that exits when converged.
-    while not converged and t < int(1.3E6):
+    while not converged and t < int(6E5):
         # Input state to controller.
-        F_control, rel_distance, rel_speed_diff, A, B = orbit_controller(np.concatenate((z_helper,z_target)), c.m, c.K1, c.K2)
+        F_control, rel_distance, rel_speed_diff, A, B = orbit_controller(np.concatenate((z_helper,z_target)), F_control, c.m)
         # Input Control Thrust and both helper and target states to dynamics.
         # Integrate dynamics to propagate forward 1 second.
         seconds_forward = 100

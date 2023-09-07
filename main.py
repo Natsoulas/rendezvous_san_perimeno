@@ -8,8 +8,8 @@ import constants as c
 
 
 # Set up initial conditions (state).
-r_helper_initial, v_helper_initial = kepler2rv(c.a*1000,c.e, np.deg2rad(c.raan), np.deg2rad(c.i),0,0,c.mu_earth)
-r_target_initial, v_target_initial = kepler2rv(c.a_t*1000,c.e_t, np.deg2rad(c.raan_t), np.deg2rad(c.i_t),0,0,c.mu_earth)
+r_helper_initial, v_helper_initial = kepler2rv(c.a*1000,c.e, np.deg2rad(c.raan), np.deg2rad(c.i),np.deg2rad(0),100,c.mu_earth)
+r_target_initial, v_target_initial = kepler2rv(c.a_t*1000,c.e_t, np.deg2rad(c.raan_t), np.deg2rad(c.i_t),0,300,c.mu_earth)
 z_helper_initial = np.concatenate((r_helper_initial,v_helper_initial))
 z_target_initial = np.concatenate((r_target_initial, v_target_initial))
 # Set up convergence criteria for the simulation. (May need tuning)

@@ -15,11 +15,15 @@ raan_t = 42 # degrees
 
 # Helper Satellite Properties:
 m = 500 # kg
-thrust = 50 # Newtons
+thrust =0.450 # Newtons
 isp = 2200 # seconds
 mu_earth = 3.986E14 # m^3/s^2
-
+Cd = 2.2 # Drag Coefficient
+Area = 1 # m^2
+rho_atmosphere = 1e-6 #kg/m^3 (general estimate)
 
 # Control Law constants (still need tuning):
-K1 = 0.0001
-K2 = 0.000001
+# Best tuning so far K1 = 0.0000001, K2 = 0.0000001
+K0 = 1
+K1 = 1
+K2 = 1000

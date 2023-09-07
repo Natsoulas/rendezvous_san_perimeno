@@ -35,11 +35,14 @@ def helper_satellite_eom(t,y,ux,uy,uz):
     r = y[:3]
     v = y[3:6]
     u = np.array([ux,uy,uz])
-    norm_r = np.linalg.norm(r)  # Norm of the position vector
+    norm_r = np.linalg.norm(r)  # Magnitude of the position vector.
+    norm_v = np.linalg.norm(v) # Magnitude of the velocity vector.
     
+    # Drag assumptions are based on the high altitude and a ballpark reference area for a low drag orientation for the spacecraft.
+    F_drag = -0.5*c.Cd*c.Area*c.rho_atmosphere*(norm_v**2)*(v/norm_v)
     # Equations of motion
     drdt = v
-    dvdt = (-c.mu_earth * r / (norm_r**3)) + u/c.m
+    dvdt = (-c.mu_earth * r / (norm_r**3)) + u/c.m + F_drag/c.m
     return np.array([drdt[0],drdt[1],drdt[2],dvdt[0],dvdt[1],dvdt[2]])
 
 def integrate_states_forward(z_helper,z_target,F_control, seconds_forward):
